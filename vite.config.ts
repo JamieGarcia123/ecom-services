@@ -5,8 +5,8 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
-  base: process.env.NODE_ENV === 'production' ? '/ecom-services/' : '/', // only use base path in production
-  build: {
+  base: '/ecom-services/',
+    build: {
     outDir: 'build/client',
     emptyOutDir: true,
   },
