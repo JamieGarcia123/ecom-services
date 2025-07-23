@@ -1,0 +1,79 @@
+[
+  {
+    "id": 1,
+    "name": "Reiki Healing",
+    "description": "One-on-one energy healing session with certified practitioners. Restore balance and promote natural healing through gentle touch therapy.",
+    "price": 75,
+    "image": "/images/reiki-healing.jpg",
+    "category": "Healing Therapies",
+    "provider": "Wellness Center",
+    "duration": "60 minutes",
+    "active": true
+  },
+  {
+    "id": 2,
+    "name": "Nutrition Consultation",
+    "description": "Professional dietary guidance and meal planning. Work with certified nutritionists to improve your health and wellness.",
+    "price": 120,
+    "image": "/images/nutritional-guidance.jpg",
+    "category": "Nutrition & Wellness",
+    "provider": "Holistic Health Clinic",
+    "duration": "90 minutes",
+    "active": true
+  },
+  {
+    "id": 3,
+    "name": "Massage Therapy",
+    "description": "Relaxing therapeutic massage sessions. Reduce stress and muscle tension with our licensed massage therapists.",
+    "price": 150,
+    "image": "/images/massage-therapy.jpg",
+    "category": "Healing Therapies",
+    "provider": "Therapeutic Touch",
+    "duration": "75 minutes",
+    "active": true
+  },
+  {
+    "id": 4,
+    "name": "Yoga Classes",
+    "description": "Group and private yoga sessions for all skill levels. Improve flexibility, strength, and mindfulness.",
+    "price": 75,
+    "image": "/images/yoga-sessions.jpg",
+    "category": "Mind & Body",
+    "provider": "Zen Studio",
+    "duration": "60 minutes",
+    "active": true
+  },
+  {
+    "id": 5,
+    "name": "Life Coaching",
+    "description": "Professional guidance to help you achieve personal and professional goals. Transform your life today.",
+    "price": 150,
+    "image": "/images/life-coaching.jpg",
+    "category": "Personal Development",
+    "provider": "Life Transformation Center",
+    "duration": "60 minutes",
+    "active": true
+  },
+  {
+    "id": 6,
+    "name": "Meditation Sessions",
+    "description": "Guided meditation and mindfulness training. Learn techniques to reduce stress and improve mental clarity.",
+    "price": 75,
+    "image": "/images/meditation-service.jpg",
+    "category": "Mind & Body",
+    "provider": "Mindful Living",
+    "duration": "45 minutes",
+    "active": true
+  },
+  {
+    "id": 7,
+    "name": "Nutrition and Holistic Apothecary Sessions",
+    "description": "Personalized herbal medicine consultations and holistic health guidance. Priced per 1 hour in-home session with starter kit included.",
+    "price": 150,
+    "image": "/images/nutrition-holistic-apothecary.jpg",
+    "category": "Nutrition & Wellness",
+    "provider": "Natural Healing Center",
+    "duration": "60 minutes",
+    "active": true
+  }
+]

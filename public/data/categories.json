@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Healing Therapies",
+    "description": "Energy work, massage, and therapeutic treatments",
+    "color": "#10B981"
+  },
+  {
+    "id": 2,
+    "name": "Mind & Body",
+    "description": "Yoga, meditation, and mindfulness practices",
+    "color": "#8B5CF6"
+  },
+  {
+    "id": 3,
+    "name": "Nutrition & Wellness",
+    "description": "Dietary guidance and holistic nutrition",
+    "color": "#F59E0B"
+  },
+  {
+    "id": 4,
+    "name": "Personal Development",
+    "description": "Life coaching and personal transformation",
+    "color": "#EF4444"
+  }
+]
