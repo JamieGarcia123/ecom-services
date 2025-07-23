@@ -6,7 +6,9 @@ import type { Item } from "../components/ItemCard";
 async function loadServiceData(id: number): Promise<Item | null> {
   try {
     // Use fetch for browser compatibility (SPA mode)
-    const response = await fetch('/data/services.json');
+    // Handle both development and production paths
+    const basePath = window.location.hostname === 'localhost' ? '' : '/ecom-services';
+    const response = await fetch(`${basePath}/data/services.json`);
     if (!response.ok) {
       console.error('Failed to fetch services.json:', response.status);
       return null;

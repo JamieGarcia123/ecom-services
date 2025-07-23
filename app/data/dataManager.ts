@@ -27,7 +27,9 @@ export interface Category {
 async function loadDataFromFile<T>(filename: string): Promise<T> {
   try {
     // In a real app, this would be a fetch to your API
-    const response = await fetch(`/data/${filename}.json`);
+    // Handle both development and production paths
+    const basePath = typeof window !== 'undefined' && window.location.hostname === 'localhost' ? '' : '/ecom-services';
+    const response = await fetch(`${basePath}/data/${filename}.json`);
     if (!response.ok) {
       throw new Error(`Failed to load ${filename}`);
     }
