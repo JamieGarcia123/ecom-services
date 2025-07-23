@@ -6,7 +6,7 @@ import type { Item } from "../components/ItemCard";
 async function loadServiceData(id: number): Promise<Item | null> {
   try {
     // Use fetch for browser compatibility (SPA mode)
-    const response = await fetch('/ecom_template/data/services.json');
+    const response = await fetch('/data/services.json');
     if (!response.ok) {
       console.error('Failed to fetch services.json:', response.status);
       return null;
