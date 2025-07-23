@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Wellness Center",
+    "email": "provider123@wellnesscenter.com",
+    "bio": "Leading provider of holistic wellness services",
+    "specialties": ["Reiki", "Energy Healing", "Wellness Coaching"],
+    "verified": true,
+    "phone": "(555) 123-4567",
+    "location": "Downtown Wellness District"
+  },
+  {
+    "id": 2,
+    "name": "Holistic Health Clinic",
+    "email": "info@holistichealth.com",
+    "bio": "Certified nutritionists and wellness experts",
+    "specialties": ["Nutrition", "Dietary Planning", "Health Coaching"],
+    "verified": true,
+    "phone": "(555) 234-5678",
+    "location": "Midtown Health Center"
+  },
+  {
+    "id": 3,
+    "name": "Therapeutic Touch",
+    "email": "contact@therapeutictouch.com",
+    "bio": "Licensed massage therapists and bodywork specialists",
+    "specialties": ["Massage Therapy", "Deep Tissue", "Relaxation"],
+    "verified": true,
+    "phone": "(555) 345-6789",
+    "location": "Spa District"
+  }
+]

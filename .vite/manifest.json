@@ -1,0 +1,90 @@
+{
+  "_ItemCard-1HL66ToB.js": {
+    "file": "assets/ItemCard-1HL66ToB.js",
+    "name": "ItemCard",
+    "imports": [
+      "_chunk-EF7DTUVF-CXM15GyG.js"
+    ]
+  },
+  "_chunk-EF7DTUVF-CXM15GyG.js": {
+    "file": "assets/chunk-EF7DTUVF-CXM15GyG.js",
+    "name": "chunk-EF7DTUVF"
+  },
+  "app/root.tsx?__react-router-build-client-route": {
+    "file": "assets/root-Cav4GDts.js",
+    "name": "root",
+    "src": "app/root.tsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_chunk-EF7DTUVF-CXM15GyG.js"
+    ],
+    "css": [
+      "assets/root-O1ATkHVm.css"
+    ]
+  },
+  "app/routes/add-service.tsx?__react-router-build-client-route": {
+    "file": "assets/add-service-Dq-5mtAT.js",
+    "name": "add-service",
+    "src": "app/routes/add-service.tsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_chunk-EF7DTUVF-CXM15GyG.js"
+    ]
+  },
+  "app/routes/home.tsx?__react-router-build-client-route": {
+    "file": "assets/home-Bx_t46OF.js",
+    "name": "home",
+    "src": "app/routes/home.tsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_chunk-EF7DTUVF-CXM15GyG.js"
+    ]
+  },
+  "app/routes/login.tsx?__react-router-build-client-route": {
+    "file": "assets/login-BRVeYWlb.js",
+    "name": "login",
+    "src": "app/routes/login.tsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_chunk-EF7DTUVF-CXM15GyG.js"
+    ]
+  },
+  "app/routes/provider-dashboard.tsx?__react-router-build-client-route": {
+    "file": "assets/provider-dashboard-XVNdRBrC.js",
+    "name": "provider-dashboard",
+    "src": "app/routes/provider-dashboard.tsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_chunk-EF7DTUVF-CXM15GyG.js",
+      "_ItemCard-1HL66ToB.js"
+    ]
+  },
+  "app/routes/service.$serviceId.tsx?__react-router-build-client-route": {
+    "file": "assets/service._serviceId-BrmhKtfn.js",
+    "name": "service._serviceId",
+    "src": "app/routes/service.$serviceId.tsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_chunk-EF7DTUVF-CXM15GyG.js"
+    ]
+  },
+  "app/routes/services.tsx?__react-router-build-client-route": {
+    "file": "assets/services-CjRNX5PA.js",
+    "name": "services",
+    "src": "app/routes/services.tsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_chunk-EF7DTUVF-CXM15GyG.js",
+      "_ItemCard-1HL66ToB.js"
+    ]
+  },
+  "node_modules/@react-router/dev/dist/config/defaults/entry.client.tsx": {
+    "file": "assets/entry.client-BjcgT1Ey.js",
+    "name": "entry.client",
+    "src": "node_modules/@react-router/dev/dist/config/defaults/entry.client.tsx",
+    "isEntry": true,
+    "imports": [
+      "_chunk-EF7DTUVF-CXM15GyG.js"
+    ]
+  }
+}
