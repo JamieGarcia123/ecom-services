@@ -16,6 +16,13 @@ export interface Provider {
   verified: boolean;
 }
 
+export interface Category {
+  id: number;
+  name: string;
+  description: string;
+  color: string;
+}
+
 // Load data from JSON files
 async function loadDataFromFile<T>(filename: string): Promise<T> {
   try {
@@ -66,15 +73,18 @@ export class DataManager {
   }
 
   async initialize(): Promise<void> {
-    const [services, categories, providers] = await Promise.all([
+    const [services, categoriesData, providers] = await Promise.all([
       loadDataFromFile<Item[]>('services'),
-      loadDataFromFile<string[]>('categories'),
+      loadDataFromFile<Category[]>('categories'),
       loadDataFromFile<Provider[]>('providers')
     ]);
 
+    // Extract category names from category objects
+    const categories = categoriesData ? categoriesData.map(cat => cat.name) : [];
+
     this.data = {
       services: services || [],
-      categories: categories || [],
+      categories: categories,
       providers: providers || []
     };
   }
