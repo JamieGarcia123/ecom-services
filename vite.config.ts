@@ -4,9 +4,13 @@ import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
-  base: '/ecom-services/',
-    build: {
+  base: process.env.NODE_ENV === 'production' ? '/ecom-services/' : '/',
+  plugins: [
+    tailwindcss(),
+    reactRouter(),
+    tsconfigPaths()
+  ],
+  build: {
     outDir: 'build/client',
     emptyOutDir: true,
   },

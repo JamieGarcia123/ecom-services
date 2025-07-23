@@ -5,11 +5,11 @@
   "homepage": "https://jamiegarcia123.github.io/ecom-services",
 
   "scripts": {
-  "dev": "vite",
-  "build": "vite build && npm run postbuild",
-  "postbuild": "node generate-index.js",
-  "preview": "vite preview",
-  "deploy": "npm run build && gh-pages -d build/client",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build/client",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc"
   },
