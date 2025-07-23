@@ -33,6 +33,11 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Add GitHub Pages files
+        run: |
+          cp 404.html build/client/ 2>/dev/null || echo "404.html not found, skipping"
+          cp .nojekyll build/client/ 2>/dev/null || echo ".nojekyll not found, skipping"
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
