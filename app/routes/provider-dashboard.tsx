@@ -29,6 +29,20 @@ export default function ProviderDashboard() {
     }
     
     loadData();
+
+    // Reload data when page becomes visible (e.g., returning from another tab/page)
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        loadData();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // Cleanup event listener
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
   // Generate reports data
@@ -245,41 +259,50 @@ export default function ProviderDashboard() {
   };
 
   // Handle delete item
-  const handleDeleteItem = (item: Item) => {
+  const handleDeleteItem = async (item: Item) => {
     if (confirm(`Are you sure you want to delete "${item.name}"? This action cannot be undone.`)) {
-      // Create a form and submit it to trigger the action
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = '/provider-dashboard';
-      
-      const intentInput = document.createElement('input');
-      intentInput.type = 'hidden';
-      intentInput.name = 'intent';
-      intentInput.value = 'delete';
-      
-      const serviceIdInput = document.createElement('input');
-      serviceIdInput.type = 'hidden';
-      serviceIdInput.name = 'serviceId';
-      serviceIdInput.value = item.id.toString();
-      
-      form.appendChild(intentInput);
-      form.appendChild(serviceIdInput);
-      document.body.appendChild(form);
-      form.submit();
+      try {
+        // Delete from database
+        const success = await dataManager.deleteService(item.id);
+        
+        if (success) {
+          // Update local state to remove the item
+          setItems(prevItems => prevItems.filter(i => i.id !== item.id));
+          setShowSuccessMessage(`Service "${item.name}" deleted successfully`);
+          setMessageType('delete');
+        } else {
+          alert('Failed to delete service. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error deleting service:', error);
+        alert('Error deleting service: ' + (error as Error).message);
+      }
     }
   };
 
   // Handle save item
-  const handleSaveItem = (updatedItem: Item) => {
-    setItems(prevItems => 
-      prevItems.map(item => 
-        item.id === updatedItem.id ? updatedItem : item
-      )
-    );
-    setEditingItem(null);
-    
-    // In a real app, you would save to database here
-    alert(`Service "${updatedItem.name}" updated successfully!`);
+  const handleSaveItem = async (updatedItem: Item) => {
+    try {
+      // Save to database
+      const savedItem = await dataManager.updateService(updatedItem.id, updatedItem);
+      
+      if (savedItem) {
+        // Update local state
+        setItems(prevItems => 
+          prevItems.map(item => 
+            item.id === updatedItem.id ? savedItem : item
+          )
+        );
+        setEditingItem(null);
+        setShowSuccessMessage(`Service "${updatedItem.name}" updated successfully!`);
+        setMessageType('success');
+      } else {
+        alert('Failed to update service. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error updating service:', error);
+      alert('Error updating service: ' + (error as Error).message);
+    }
   };
 
   // Handle cancel edit

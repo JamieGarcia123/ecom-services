@@ -155,6 +155,110 @@ class SupabaseDataManager {
     }
   }
 
+  async deleteService(id: number): Promise<boolean> {
+    if (!isSupabaseConfigured() || !supabase) {
+      throw new Error('Supabase not configured. Please set up your environment variables.');
+    }
+
+    try {
+      const { error } = await supabase
+        .from('services')
+        .update({ active: false })
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error deleting service:', error);
+        throw error;
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Error deleting service from Supabase:', error);
+      throw error;
+    }
+  }
+
+  async updateService(id: number, updates: Partial<Item>): Promise<Item | null> {
+    if (!isSupabaseConfigured() || !supabase) {
+      throw new Error('Supabase not configured. Please set up your environment variables.');
+    }
+
+    try {
+      console.log('Updating service:', id, 'with updates:', updates);
+
+      // First, check if the service exists (don't filter by active in case it was deactivated)
+      const { data: existingService, error: checkError } = await supabase
+        .from('services')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (checkError || !existingService) {
+        console.error('Service not found:', checkError);
+        throw new Error(`Service with ID ${id} not found`);
+      }
+
+      console.log('Existing service found:', existingService);
+
+      // Clean the updates object - remove any undefined or null values and non-database fields
+      const cleanUpdates = Object.fromEntries(
+        Object.entries(updates).filter(([key, value]) => 
+          value !== undefined && 
+          value !== null && 
+          // Only include fields that exist in the Supabase table
+          ['name', 'description', 'price', 'image', 'category', 'provider', 'duration', 'active'].includes(key)
+        )
+      );
+
+      console.log('Clean updates:', cleanUpdates);
+
+      // Check if cleanUpdates is empty
+      if (Object.keys(cleanUpdates).length === 0) {
+        console.log('No valid updates to apply, returning existing service');
+        return existingService;
+      }
+
+      // Try update without RLS restrictions by using a more permissive approach
+      console.log('Executing update query for service ID:', id);
+      
+      // First try a direct update
+      const updateResult = await supabase
+        .from('services')
+        .update(cleanUpdates)
+        .eq('id', id);
+
+      console.log('Update result (without select):', updateResult);
+
+      if (updateResult.error) {
+        console.error('Supabase update error:', updateResult.error);
+        throw new Error(`Database error: ${updateResult.error.message}`);
+      }
+
+      // Check if the update actually affected any rows
+      if (updateResult.status === 204) {
+        console.log('Update returned 204 - checking if data actually changed...');
+      }
+
+      // Now fetch the updated record
+      const { data: updatedService, error: fetchError } = await supabase
+        .from('services')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (fetchError || !updatedService) {
+        console.error('Error fetching updated service:', fetchError);
+        throw new Error(`Update may have succeeded but couldn't fetch updated service: ${fetchError?.message}`);
+      }
+
+      console.log('Successfully updated and fetched service:', updatedService);
+      return updatedService;
+    } catch (error) {
+      console.error('Error updating service in Supabase:', error);
+      throw error;
+    }
+  }
+
   isConfigured(): boolean {
     return isSupabaseConfigured() && supabase !== null;
   }

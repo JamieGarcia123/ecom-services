@@ -145,6 +145,10 @@ export class DataManager {
   }
 
   async updateService(id: number, updates: Partial<Item>): Promise<Item | null> {
+    if (supabaseDataManager.isConfigured()) {
+      return await supabaseDataManager.updateService(id, updates);
+    }
+    
     const index = this.data.services.findIndex(service => service.id === id);
     if (index === -1) return null;
 
@@ -154,6 +158,10 @@ export class DataManager {
   }
 
   async deleteService(id: number): Promise<boolean> {
+    if (supabaseDataManager.isConfigured()) {
+      return await supabaseDataManager.deleteService(id);
+    }
+    
     const index = this.data.services.findIndex(service => service.id === id);
     if (index === -1) return false;
 
