@@ -696,7 +696,10 @@ interface EditItemModalProps {
 }
 
 function EditItemModal({ item, onSave, onCancel, onChange }: EditItemModalProps) {
+  const [validationError, setValidationError] = useState<string | null>(null);
+
   const handleInputChange = (field: keyof Item, value: string | number) => {
+    setValidationError(null); // Clear validation error when user types
     onChange({
       ...item,
       [field]: value
@@ -705,7 +708,25 @@ function EditItemModal({ item, onSave, onCancel, onChange }: EditItemModalProps)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(item);
+    
+    // Validation
+    if (isNaN(item.price) || item.price <= 0) {
+      setValidationError("Please enter a valid price greater than $0.00");
+      return;
+    }
+    
+    if (item.duration && !item.duration.toLowerCase().match(/(minute|hour|min|hr)/)) {
+      setValidationError("Duration must include time units (e.g., '60 minutes', '1 hour')");
+      return;
+    }
+    
+    // Round price to 2 decimal places
+    const updatedItem = {
+      ...item,
+      price: Math.round(item.price * 100) / 100
+    };
+    
+    onSave(updatedItem);
   };
 
   return (
@@ -714,6 +735,15 @@ function EditItemModal({ item, onSave, onCancel, onChange }: EditItemModalProps)
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Edit Service</h3>
         
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Validation Error */}
+          {validationError && (
+            <div className="rounded-md bg-red-50 p-3">
+              <div className="text-sm text-red-700">
+                {validationError}
+              </div>
+            </div>
+          )}
+
           {/* Service Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -749,12 +779,59 @@ function EditItemModal({ item, onSave, onCancel, onChange }: EditItemModalProps)
             </label>
             <input
               type="number"
-              min="0"
+              min="0.01"
               step="0.01"
               value={item.price}
               onChange={(e) => handleInputChange('price', parseFloat(e.target.value) || 0)}
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="75.00"
+              title="Enter price in format: 75.00"
               required
+            />
+            <p className="mt-1 text-xs text-gray-500">Format: 00.00 (e.g., 75.00)</p>
+          </div>
+
+          {/* Duration */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Duration
+            </label>
+            <input
+              type="text"
+              value={item.duration || ''}
+              onChange={(e) => handleInputChange('duration', e.target.value)}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="60 minutes"
+              title="Include time units: minutes, hours, mins, hrs"
+            />
+            <p className="mt-1 text-xs text-gray-500">Include time units (e.g., "60 minutes", "1 hour")</p>
+          </div>
+
+          {/* Category */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Category
+            </label>
+            <input
+              type="text"
+              value={item.category || ''}
+              onChange={(e) => handleInputChange('category', e.target.value)}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="e.g., Healing Therapies"
+            />
+          </div>
+
+          {/* Provider */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Provider
+            </label>
+            <input
+              type="text"
+              value={item.provider || ''}
+              onChange={(e) => handleInputChange('provider', e.target.value)}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="e.g., Wellness Center"
             />
           </div>
 

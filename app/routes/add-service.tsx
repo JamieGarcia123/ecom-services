@@ -24,13 +24,32 @@ export default function AddService() {
 
     try {
       const formData = new FormData(event.currentTarget);
+      
+      // Validation
+      const price = parseFloat(formData.get('price') as string);
+      const duration = formData.get('duration') as string;
+      
+      // Price validation
+      if (isNaN(price) || price <= 0) {
+        setError("Please enter a valid price greater than $0.00");
+        setIsSubmitting(false);
+        return;
+      }
+      
+      // Duration validation
+      if (duration && !duration.toLowerCase().match(/(minute|hour|min|hr)/)) {
+        setError("Duration must include time units (e.g., '60 minutes', '1 hour', '90 mins')");
+        setIsSubmitting(false);
+        return;
+      }
+      
       const serviceData = {
         name: formData.get('name') as string,
         description: formData.get('description') as string,
-        price: parseFloat(formData.get('price') as string),
+        price: Math.round(price * 100) / 100, // Round to 2 decimal places
         category: formData.get('category') as string,
         provider: formData.get('provider') as string,
-        duration: formData.get('duration') as string,
+        duration: duration || undefined,
         image: formData.get('image') as string || undefined,
       };
 
@@ -176,12 +195,14 @@ export default function AddService() {
                   type="number"
                   id="price"
                   name="price"
-                  min="0"
+                  min="0.01"
                   step="0.01"
                   required
                   className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   placeholder="75.00"
+                  title="Enter price in format: 75.00"
                 />
+                <p className="mt-1 text-sm text-gray-500">Format: 00.00 (e.g., 75.00)</p>
               </div>
 
               <div>
@@ -194,7 +215,9 @@ export default function AddService() {
                   name="duration"
                   className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   placeholder="60 minutes"
+                  title="Include time units: minutes, hours, mins, hrs"
                 />
+                <p className="mt-1 text-sm text-gray-500">Include time units (e.g., "60 minutes", "1 hour")</p>
               </div>
             </div>
 
