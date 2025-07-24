@@ -89,6 +89,7 @@ export class SupabaseDataManager {
           name: service.name,
           description: service.description,
           price: service.price,
+          duration: service.duration,
           image: service.image,
           source: service.source,
           provider_id: providerId,
@@ -231,6 +232,7 @@ export class SupabaseDataManager {
       name: data.name,
       description: data.description,
       price: data.price,
+      duration: data.duration,
       image: data.image,
       source: data.source,
     };
@@ -259,6 +261,7 @@ CREATE TABLE IF NOT EXISTS services (
   name TEXT NOT NULL,
   description TEXT NOT NULL,
   price DECIMAL(10,2) NOT NULL,
+  duration TEXT,
   image TEXT,
   source TEXT,
   provider_id BIGINT REFERENCES providers(id),
