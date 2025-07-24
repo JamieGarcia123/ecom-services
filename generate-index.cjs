@@ -30,12 +30,12 @@ const html = `<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Holistic Wellness Services</title>
     <meta name="description" content="Discover our comprehensive range of holistic wellness services including reiki healing, yoga sessions, nutrition guidance, and more." />
-    <link rel="icon" href="/ecom-services/favicon.ico" />
-    ${cssFile ? `<link rel="stylesheet" href="/ecom-services/${cssFile}">` : ''}
+    <link rel="icon" href="/favicon.ico" />
+    ${cssFile ? `<link rel="stylesheet" href="/${cssFile}">` : ''}
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/ecom-services/${entryFile}"></script>
+    <script type="module" src="/${entryFile}"></script>
   </body>
 </html>`;
 
