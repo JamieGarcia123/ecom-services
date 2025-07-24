@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { redirect } from "react-router";
 import { addNewService, getAllCategories, getAllProviders, type ServiceItem, type Category, type Provider } from "../data/jsonDataManager";
+import { supabaseDataManager } from "../data/supabaseDataManager";
 
 export default function AddService() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -13,8 +14,40 @@ export default function AddService() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSubmitting(true);
-    setError("Service addition requires a backend server. This feature is disabled in the static GitHub Pages deployment.");
-    setIsSubmitting(false);
+    setError(null);
+
+    if (!supabaseDataManager.isConfigured()) {
+      setError("Service addition requires Supabase configuration. Please set up your environment variables or use a platform with backend support.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      const formData = new FormData(event.currentTarget);
+      const serviceData = {
+        name: formData.get('name') as string,
+        description: formData.get('description') as string,
+        price: parseFloat(formData.get('price') as string),
+        category: formData.get('category') as string,
+        provider: formData.get('provider') as string,
+        duration: formData.get('duration') as string,
+        image: formData.get('image') as string || undefined,
+      };
+
+      const newService = await supabaseDataManager.addService(serviceData);
+      
+      if (newService) {
+        // Redirect to services page on success
+        window.location.href = '/services';
+      } else {
+        setError("Failed to add service. Please try again.");
+      }
+    } catch (error) {
+      console.error('Error adding service:', error);
+      setError("Error adding service: " + (error as Error).message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Load categories and providers on component mount
@@ -57,8 +90,42 @@ export default function AddService() {
           <p className="text-gray-600">Create a new holistic service offering</p>
         </div>
 
+        {/* Static Site Notice */}
+        {!supabaseDataManager.isConfigured() ? (
+          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-yellow-700">
+                  <strong>Setup Required:</strong> To enable service addition, please set up Supabase (free database). 
+                  See <strong>SUPABASE_SETUP.md</strong> for instructions. Without Supabase, this is a static demo only.
+                </p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-green-50 border-l-4 border-green-400 p-4 mb-6">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-green-700">
+                  <strong>Database Connected:</strong> Supabase is configured. You can add new services to the database.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Form */}
-        <div className="bg-white shadow-md rounded-lg p-6">
+        <div className={`bg-white shadow-md rounded-lg p-6 ${!supabaseDataManager.isConfigured() ? 'opacity-75' : ''}`}>
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Error Message */}
             {error && (
@@ -191,11 +258,25 @@ export default function AddService() {
             <div className="pt-4">
               <button
                 type="submit"
-                disabled={isSubmitting}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                disabled={isSubmitting || !supabaseDataManager.isConfigured()}
+                className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-white font-medium ${
+                  supabaseDataManager.isConfigured() 
+                    ? 'bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed'
+                    : 'bg-gray-400 cursor-not-allowed'
+                }`}
               >
-                {isSubmitting ? "Adding Service..." : "Add Service"}
+                {isSubmitting 
+                  ? "Adding Service..." 
+                  : supabaseDataManager.isConfigured() 
+                    ? "Add Service" 
+                    : "Add Service (Setup Supabase First)"
+                }
               </button>
+              {!supabaseDataManager.isConfigured() && (
+                <p className="mt-2 text-sm text-gray-500 text-center">
+                  Configure Supabase to enable service addition
+                </p>
+              )}
             </div>
           </form>
 

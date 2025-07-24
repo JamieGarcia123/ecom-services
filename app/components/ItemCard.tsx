@@ -9,6 +9,10 @@ export interface Item {
   price: number;
   image?: string; // Optional image property
   source?: string; // Optional source property for external links
+  category?: string; // Category for filtering
+  provider?: string; // Service provider
+  duration?: string; // Service duration
+  active?: boolean; // Whether the service is active
 }
 
 interface ItemCardProps {

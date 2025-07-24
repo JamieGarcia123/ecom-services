@@ -1,5 +1,5 @@
-import { Link } from "react-router";
-import { useState, useEffect } from "react";
+import { Link, useSearchParams } from "react-router";
+import { useState, useEffect, useMemo } from "react";
 import { ItemCard, type Item } from "../components/ItemCard";
 import { dataManager } from "../data/dataManager";
 
@@ -7,13 +7,21 @@ export default function Services() {
   const [services, setServices] = useState<Item[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  
+  const selectedCategory = searchParams.get('category');
 
   useEffect(() => {
     async function loadData() {
       try {
         await dataManager.initialize();
-        setServices(dataManager.getAllServices());
-        setCategories(dataManager.getAllCategories());
+        const [servicesData, categoriesData] = await Promise.all([
+          dataManager.getAllServices(),
+          dataManager.getAllCategories()
+        ]);
+        setServices(servicesData);
+        setCategories(categoriesData);
       } catch (error) {
         console.error('Error loading data:', error);
       } finally {
@@ -22,6 +30,43 @@ export default function Services() {
     }
     loadData();
   }, []);
+
+  // Filter and search services
+  const filteredServices = useMemo(() => {
+    let filtered = services;
+
+    // Filter by category
+    if (selectedCategory) {
+      filtered = filtered.filter(service => 
+        service.category === selectedCategory
+      );
+    }
+
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(service => 
+        service.name.toLowerCase().includes(query) ||
+        service.description.toLowerCase().includes(query) ||
+        (service.category && service.category.toLowerCase().includes(query))
+      );
+    }
+
+    return filtered;
+  }, [services, selectedCategory, searchQuery]);
+
+  const handleCategoryFilter = (category: string | null) => {
+    if (category) {
+      setSearchParams({ category });
+    } else {
+      setSearchParams({});
+    }
+  };
+
+  const clearFilters = () => {
+    setSearchQuery("");
+    setSearchParams({});
+  };
 
   if (loading) {
     return (
@@ -50,31 +95,86 @@ export default function Services() {
           </p>
         </div>
 
+        {/* Search Bar */}
+        <div className="mb-8">
+          <div className="relative max-w-md mx-auto">
+            <input
+              type="text"
+              placeholder="Search services..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            />
+            <svg
+              className="absolute right-3 top-3.5 h-5 w-5 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
+        </div>
+
         {/* Categories Filter */}
         <div className="mb-8">
           <h3 className="text-lg font-semibold mb-4">Filter by Category:</h3>
           <div className="flex flex-wrap gap-2">
-            <Link 
-              to="/services" 
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            <button
+              onClick={() => handleCategoryFilter(null)}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                !selectedCategory
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
             >
               All Services
-            </Link>
+            </button>
             {categories.map((category) => (
-              <Link
+              <button
                 key={category}
-                to={`/services?category=${encodeURIComponent(category)}`}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                onClick={() => handleCategoryFilter(category)}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  selectedCategory === category
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
               >
                 {category}
-              </Link>
+              </button>
             ))}
           </div>
+          
+          {/* Clear Filters Button */}
+          {(selectedCategory || searchQuery) && (
+            <div className="mt-4">
+              <button
+                onClick={clearFilters}
+                className="text-blue-600 hover:text-blue-800 text-sm underline"
+              >
+                Clear all filters
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Results Count */}
+        <div className="mb-6">
+          <p className="text-gray-600">
+            Showing {filteredServices.length} of {services.length} services
+            {selectedCategory && ` in "${selectedCategory}"`}
+            {searchQuery && ` matching "${searchQuery}"`}
+          </p>
         </div>
 
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map((service: Item) => (
+          {filteredServices.map((service: Item) => (
             <Link key={service.id} to={`/service/${service.id}`}>
               <ItemCard item={service} />
             </Link>
@@ -82,7 +182,7 @@ export default function Services() {
         </div>
 
         {/* Empty State */}
-        {services.length === 0 && (
+        {filteredServices.length === 0 && !loading && (
           <div className="text-center py-12">
             <div className="text-gray-400 mb-4">
               <svg
@@ -100,31 +200,36 @@ export default function Services() {
               </svg>
             </div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No services available
+              {searchQuery || selectedCategory ? 'No matching services found' : 'No services available'}
             </h3>
             <p className="text-gray-500">
-              Check back later for new services.
+              {searchQuery || selectedCategory 
+                ? 'Try adjusting your search or filter criteria.'
+                : 'Check back later for new services.'
+              }
             </p>
           </div>
         )}
 
         {/* Call to Action */}
-        <div className="mt-16 text-center">
-          <div className="bg-blue-50 rounded-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Ready to Get Started?
-            </h2>
-            <p className="text-gray-600 mb-6">
-              Book your first session today and take the first step towards better wellness.
-            </p>
-            <Link
-              to="/login"
-              className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-            >
-              Book Now
-            </Link>
+        {filteredServices.length > 0 && (
+          <div className="mt-16 text-center">
+            <div className="bg-blue-50 rounded-lg p-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                Ready to Get Started?
+              </h2>
+              <p className="text-gray-600 mb-6">
+                Book your first session today and take the first step towards better wellness.
+              </p>
+              <Link
+                to="/login"
+                className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+              >
+                Book Now
+              </Link>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import type { Item } from "../components/ItemCard";
+import { supabaseDataManager } from "./supabaseDataManager";
 
 // Data storage interface
 export interface DataStore {
@@ -75,6 +76,29 @@ export class DataManager {
   }
 
   async initialize(): Promise<void> {
+    // Try Supabase first, fall back to JSON files
+    if (supabaseDataManager.isConfigured()) {
+      try {
+        const [services, categories] = await Promise.all([
+          supabaseDataManager.getAllServices(),
+          supabaseDataManager.getAllCategories()
+        ]);
+
+        // Load providers from JSON (can be moved to Supabase later)
+        const providers = await loadDataFromFile<Provider[]>('providers');
+
+        this.data = {
+          services: services || [],
+          categories: categories || [],
+          providers: providers || []
+        };
+        return;
+      } catch (error) {
+        console.warn('Supabase failed, falling back to JSON:', error);
+      }
+    }
+
+    // Fallback to JSON files
     const [services, categoriesData, providers] = await Promise.all([
       loadDataFromFile<Item[]>('services'),
       loadDataFromFile<Category[]>('categories'),
@@ -92,29 +116,32 @@ export class DataManager {
   }
 
   // Service methods
-  getAllServices(): Item[] {
+  async getAllServices(): Promise<Item[]> {
+    if (supabaseDataManager.isConfigured()) {
+      return await supabaseDataManager.getAllServices();
+    }
     return this.data.services;
   }
 
-  getServiceById(id: number): Item | undefined {
+  async getServiceById(id: number): Promise<Item | undefined> {
+    if (supabaseDataManager.isConfigured()) {
+      const service = await supabaseDataManager.getServiceById(id);
+      return service || undefined;
+    }
     return this.data.services.find(service => service.id === id);
+  }
+
+  async addService(service: Omit<Item, 'id'>): Promise<Item | null> {
+    if (supabaseDataManager.isConfigured()) {
+      return await supabaseDataManager.addService(service);
+    }
+    throw new Error('Service addition requires Supabase configuration');
   }
 
   getServicesByCategory(category: string): Item[] {
     return this.data.services.filter(service => 
       service.description.toLowerCase().includes(category.toLowerCase())
     );
-  }
-
-  async addService(service: Omit<Item, 'id'>): Promise<Item> {
-    const newService: Item = {
-      ...service,
-      id: Math.max(...this.data.services.map(s => s.id), 0) + 1
-    };
-    
-    this.data.services.push(newService);
-    await saveDataToFile('services', this.data.services);
-    return newService;
   }
 
   async updateService(id: number, updates: Partial<Item>): Promise<Item | null> {
@@ -145,7 +172,10 @@ export class DataManager {
   }
 
   // Category methods
-  getAllCategories(): string[] {
+  async getAllCategories(): Promise<string[]> {
+    if (supabaseDataManager.isConfigured()) {
+      return await supabaseDataManager.getAllCategories();
+    }
     return this.data.categories;
   }
 }
@@ -157,16 +187,16 @@ export async function initializeData(): Promise<void> {
   await dataManager.initialize();
 }
 
-export function getAllItems(): Item[] {
-  return dataManager.getAllServices();
+export async function getAllItems(): Promise<Item[]> {
+  return await dataManager.getAllServices();
 }
 
-export function getItemById(id: number): Item | undefined {
-  return dataManager.getServiceById(id);
+export async function getItemById(id: number): Promise<Item | undefined> {
+  return await dataManager.getServiceById(id);
 }
 
-export async function addNewService(service: Omit<Item, 'id'>): Promise<Item> {
-  return dataManager.addService(service);
+export async function addNewService(service: Omit<Item, 'id'>): Promise<Item | null> {
+  return await dataManager.addService(service);
 }
 
 export async function updateExistingService(id: number, updates: Partial<Item>): Promise<Item | null> {

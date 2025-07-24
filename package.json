@@ -3,7 +3,6 @@
   "private": true,
   "type": "module",
   "homepage": "https://jamiegarcia123.github.io/ecom-services",
-
   "scripts": {
     "dev": "vite",
     "build": "vite build && node generate-index.cjs",
@@ -16,7 +15,7 @@
   "dependencies": {
     "@react-router/node": "^7.5.3",
     "@react-router/serve": "^7.5.3",
-    "@supabase/supabase-js": "^2.52.0",
+    "@supabase/supabase-js": "^2.52.1",
     "isbot": "^5.1.27",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -33,6 +32,5 @@
     "typescript": "^5.8.3",
     "vite": "^6.3.3",
     "vite-tsconfig-paths": "^5.1.4"
-  }   
- 
+  }
 }

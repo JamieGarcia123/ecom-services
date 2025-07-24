@@ -1,78 +1,8 @@
-    import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, redirect, useSearchParams, Form } from "react-router";
 import { ItemCard, type Item } from "../components/ItemCard";
-import { getAllItemsAsync } from "../data/jsonDataManager";
-
-// Function to load services data (browser-compatible)
-async function loadServicesData(): Promise<Item[]> {
-  try {
-    console.log('=== loadServicesData called ===');
-    
-    // Use fetch for browser compatibility (SPA mode)
-    const response = await fetch('/ecom_template/data/services.json');
-    if (!response.ok) {
-      throw new Error(`Failed to fetch services: ${response.status}`);
-    }
-    
-    const services = await response.json();
-    console.log('Loaded from fetch:', services.length, 'services');
-    return services.filter((s: any) => s.active !== false);
-  } catch (error) {
-    console.error('Error loading services data:', error);
-    // Fallback to hardcoded data
-    return [
-      {
-        id: 1,
-        name: "Reiki Healing",
-        description: "One-on-one energy healing session with certified practitioners. Restore balance and promote natural healing through gentle touch therapy.",
-        price: 75.00,
-        image: "/images/reiki-healing.jpg"
-      },
-      {
-        id: 2,
-        name: "Nutrition Consultation",
-        description: "Professional dietary guidance and meal planning. Work with certified nutritionists to improve your health and wellness.",
-        price: 120.00,
-        image: "/images/nutritional-guidance.jpg"
-      },
-      {
-        id: 3,
-        name: "Massage Therapy",
-        description: "Relaxing therapeutic massage sessions. Reduce stress and muscle tension with our licensed massage therapists.",
-        price: 150.00,
-        image: "/images/massage-therapy.jpg"
-      },
-      {
-        id: 4,
-        name: "Yoga Classes",
-        description: "Group and private yoga sessions for all skill levels. Improve flexibility, strength, and mindfulness.",
-        price: 75.00,
-        image: "/images/yoga-sessions.jpg"
-      },
-      {
-        id: 5,
-        name: "Life Coaching",
-        description: "Professional guidance to help you achieve personal and professional goals. Transform your life today.",
-        price: 150.00,
-        image: "/images/life-coaching.jpg"
-      },
-      {
-        id: 6,
-        name: "Meditation Sessions",
-        description: "Guided meditation and mindfulness training. Learn techniques to reduce stress and improve mental clarity.",
-        price: 75.00,
-        image: "/images/meditation-service.jpg"
-      },
-      {
-        id: 7,
-        name: "Nutrition and Holistic Apothecary Sessions",
-        description: "Personalized herbal medicine consultations and holistic health guidance. Priced per 1 hour in-home session with starter kit included.",
-        price: 150.00,
-        image: "/images/nutrition-holistic-apothecary.jpg"
-      }
-    ];
-  }
-}
+import { dataManager } from "../data/dataManager";
+import { supabaseDataManager } from "../data/supabaseDataManager";
 
 export default function ProviderDashboard() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -88,7 +18,8 @@ export default function ProviderDashboard() {
   useEffect(() => {
     async function loadData() {
       try {
-        const services = await loadServicesData();
+        await dataManager.initialize();
+        const services = await dataManager.getAllServices();
         setItems(services);
       } catch (error) {
         console.error('Error loading services:', error);
@@ -394,9 +325,19 @@ export default function ProviderDashboard() {
              
               <Link 
                 to="/add-service" 
-                className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-md text-sm font-medium"
+                className={`px-3 py-2 rounded-md text-sm font-medium relative group text-white ${
+                  supabaseDataManager.isConfigured() 
+                    ? 'bg-green-600 hover:bg-green-700' 
+                    : 'bg-yellow-600 hover:bg-yellow-700'
+                }`}
+                title={supabaseDataManager.isConfigured() ? "Add a new service" : "Setup Supabase to enable service addition"}
               >
-                + Add New Service
+                + Add New Service{!supabaseDataManager.isConfigured() ? ' (Setup Required)' : ''}
+                {!supabaseDataManager.isConfigured() && (
+                  <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                    Setup Supabase to enable
+                  </span>
+                )}
               </Link>
               <button
                 onClick={handleLogout}
@@ -643,19 +584,37 @@ export default function ProviderDashboard() {
               <h2 className="text-2xl font-bold text-gray-900">Your Services</h2>
               <Link 
                 to="/add-service"
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white relative group ${
+                  supabaseDataManager.isConfigured() 
+                    ? 'bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500' 
+                    : 'bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500'
+                }`}
+                title={supabaseDataManager.isConfigured() ? "Add a new service" : "Setup Supabase to enable service addition"}
               >
                 <svg className="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-                Add New Service
+                Add New Service{!supabaseDataManager.isConfigured() ? ' (Setup Required)' : ''}
+                {!supabaseDataManager.isConfigured() && (
+                  <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                    Setup Supabase to enable
+                  </span>
+                )}
               </Link>
             </div>
-            <div className="bg-blue-50 rounded-lg p-4">
-              <p className="text-blue-800">
-                You have {items.length} services listed. Click "Edit" on any service to update its details, or add a new service using the button above.
-              </p>
-            </div>
+            {supabaseDataManager.isConfigured() ? (
+              <div className="bg-green-50 rounded-lg p-4 border-l-4 border-green-400">
+                <p className="text-green-800">
+                  <strong>Database Connected:</strong> You have {items.length} services listed. Supabase is configured and you can add/edit services that will be saved to the database.
+                </p>
+              </div>
+            ) : (
+              <div className="bg-yellow-50 rounded-lg p-4 border-l-4 border-yellow-400">
+                <p className="text-yellow-800">
+                  <strong>Setup Required:</strong> You have {items.length} services listed from static data. To enable adding/editing services, configure Supabase (free database). See <strong>SUPABASE_SETUP.md</strong> for instructions.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Services Grid */}
