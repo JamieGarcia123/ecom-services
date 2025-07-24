@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { redirect } from "react-router";
 
 // Hardcoded credentials for demo
 const DEMO_CREDENTIALS = {

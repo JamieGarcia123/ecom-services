@@ -5,12 +5,10 @@
   "homepage": "https://jamiegarcia123.github.io/ecom-services/",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node generate-index.cjs",
+    "build": "vite build",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build/client",
-    "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc"
+    "deploy": "gh-pages -d build/client"
   },
   "dependencies": {
     "@react-router/node": "^7.5.3",

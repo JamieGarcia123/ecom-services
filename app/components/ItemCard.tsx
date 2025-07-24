@@ -1,5 +1,5 @@
 
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 // TypeScript interface matching the C# item class
 export interface Item {

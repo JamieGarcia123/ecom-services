@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { redirect } from "react-router";
 import { addNewService, getAllCategories, getAllProviders, type ServiceItem, type Category, type Provider } from "../data/jsonDataManager";
 import { supabaseDataManager } from "../data/supabaseDataManager";
 

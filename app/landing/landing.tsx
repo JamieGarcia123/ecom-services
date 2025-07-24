@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 const items = [
   { title: "Jeans", text: "Browse our products" },

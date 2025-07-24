@@ -3,9 +3,10 @@ import ReactDOM from "react-dom/client";
 import {
   createBrowserRouter,
   RouterProvider,
+  Outlet,
 } from "react-router-dom";
 
-import { Layout } from "../app/root";
+import { Header } from "../app/components/Header";
 import Home from "../app/routes/home";
 import Services from "../app/routes/services";
 import ServiceDetail from "../app/routes/service.$serviceId";
@@ -13,10 +14,22 @@ import Login from "../app/routes/login";
 import ProviderDashboard from "../app/routes/provider-dashboard";
 import AddService from "../app/routes/add-service";
 
+// CSS import
+import "../app/app.css";
+
+function Layout() {
+  return (
+    <>
+      <Header />
+      <Outlet />
+    </>
+  );
+}
+
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout><div id="root-outlet" /></Layout>,
+    element: <Layout />,
     children: [
       { index: true, element: <Home /> },
       { path: "services", element: <Services /> },
@@ -26,9 +39,7 @@ const router = createBrowserRouter([
       { path: "add-service", element: <AddService /> },
     ],
   },
-], {
-  basename: process.env.NODE_ENV === 'production' ? '/ecom-services' : '/'
-});
+]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
