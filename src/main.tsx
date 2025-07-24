@@ -13,6 +13,8 @@ import ServiceDetail from "../app/routes/service.$serviceId";
 import Login from "../app/routes/login";
 import ProviderDashboard from "../app/routes/provider-dashboard";
 import AddService from "../app/routes/add-service";
+import TestSupabase from "../app/routes/test-supabase";
+import DebugEnv from "../app/routes/debug-env";
 
 // CSS import
 import "../app/app.css";
@@ -37,6 +39,8 @@ const router = createBrowserRouter([
       { path: "login", element: <Login /> },
       { path: "provider-dashboard", element: <ProviderDashboard /> },
       { path: "add-service", element: <AddService /> },
+      { path: "test-supabase", element: <TestSupabase /> },
+      { path: "debug-env", element: <DebugEnv /> },
     ],
   },
 ]);
