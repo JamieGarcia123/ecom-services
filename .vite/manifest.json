@@ -1,90 +1,101 @@
 {
-  "_ItemCard-1HL66ToB.js": {
-    "file": "assets/ItemCard-1HL66ToB.js",
-    "name": "ItemCard",
-    "imports": [
-      "_chunk-EF7DTUVF-CXM15GyG.js"
-    ]
-  },
-  "_chunk-EF7DTUVF-CXM15GyG.js": {
-    "file": "assets/chunk-EF7DTUVF-CXM15GyG.js",
+  "_chunk-EF7DTUVF-DFp-VzBN.js": {
+    "file": "assets/chunk-EF7DTUVF-DFp-VzBN.js",
     "name": "chunk-EF7DTUVF"
   },
+  "_dataManager-qUq1lbjI.js": {
+    "file": "assets/dataManager-qUq1lbjI.js",
+    "name": "dataManager",
+    "imports": [
+      "_chunk-EF7DTUVF-DFp-VzBN.js",
+      "_supabaseDataManager-CPgVSS-r.js"
+    ]
+  },
+  "_supabaseDataManager-CPgVSS-r.js": {
+    "file": "assets/supabaseDataManager-CPgVSS-r.js",
+    "name": "supabaseDataManager",
+    "imports": [
+      "_chunk-EF7DTUVF-DFp-VzBN.js"
+    ]
+  },
   "app/root.tsx?__react-router-build-client-route": {
-    "file": "assets/root-Cav4GDts.js",
+    "file": "assets/root-oY9q_DcV.js",
     "name": "root",
     "src": "app/root.tsx?__react-router-build-client-route",
     "isEntry": true,
     "imports": [
-      "_chunk-EF7DTUVF-CXM15GyG.js"
+      "_chunk-EF7DTUVF-DFp-VzBN.js"
     ],
     "css": [
-      "assets/root-O1ATkHVm.css"
+      "assets/root-tCrJQepF.css"
     ]
   },
   "app/routes/add-service.tsx?__react-router-build-client-route": {
-    "file": "assets/add-service-Dq-5mtAT.js",
+    "file": "assets/add-service-DTiHZs06.js",
     "name": "add-service",
     "src": "app/routes/add-service.tsx?__react-router-build-client-route",
     "isEntry": true,
     "imports": [
-      "_chunk-EF7DTUVF-CXM15GyG.js"
+      "_chunk-EF7DTUVF-DFp-VzBN.js",
+      "_supabaseDataManager-CPgVSS-r.js"
     ]
   },
   "app/routes/home.tsx?__react-router-build-client-route": {
-    "file": "assets/home-Bx_t46OF.js",
+    "file": "assets/home-7s216a5c.js",
     "name": "home",
     "src": "app/routes/home.tsx?__react-router-build-client-route",
     "isEntry": true,
     "imports": [
-      "_chunk-EF7DTUVF-CXM15GyG.js"
+      "_chunk-EF7DTUVF-DFp-VzBN.js"
     ]
   },
   "app/routes/login.tsx?__react-router-build-client-route": {
-    "file": "assets/login-BRVeYWlb.js",
+    "file": "assets/login-BCG9vDOd.js",
     "name": "login",
     "src": "app/routes/login.tsx?__react-router-build-client-route",
     "isEntry": true,
     "imports": [
-      "_chunk-EF7DTUVF-CXM15GyG.js"
+      "_chunk-EF7DTUVF-DFp-VzBN.js"
     ]
   },
   "app/routes/provider-dashboard.tsx?__react-router-build-client-route": {
-    "file": "assets/provider-dashboard-XVNdRBrC.js",
+    "file": "assets/provider-dashboard-CHaDf7lA.js",
     "name": "provider-dashboard",
     "src": "app/routes/provider-dashboard.tsx?__react-router-build-client-route",
     "isEntry": true,
     "imports": [
-      "_chunk-EF7DTUVF-CXM15GyG.js",
-      "_ItemCard-1HL66ToB.js"
+      "_chunk-EF7DTUVF-DFp-VzBN.js",
+      "_dataManager-qUq1lbjI.js",
+      "_supabaseDataManager-CPgVSS-r.js"
     ]
   },
   "app/routes/service.$serviceId.tsx?__react-router-build-client-route": {
-    "file": "assets/service._serviceId-BrmhKtfn.js",
+    "file": "assets/service._serviceId-BJvABOYX.js",
     "name": "service._serviceId",
     "src": "app/routes/service.$serviceId.tsx?__react-router-build-client-route",
     "isEntry": true,
     "imports": [
-      "_chunk-EF7DTUVF-CXM15GyG.js"
+      "_chunk-EF7DTUVF-DFp-VzBN.js"
     ]
   },
   "app/routes/services.tsx?__react-router-build-client-route": {
-    "file": "assets/services-CjRNX5PA.js",
+    "file": "assets/services-JuhThssl.js",
     "name": "services",
     "src": "app/routes/services.tsx?__react-router-build-client-route",
     "isEntry": true,
     "imports": [
-      "_chunk-EF7DTUVF-CXM15GyG.js",
-      "_ItemCard-1HL66ToB.js"
+      "_chunk-EF7DTUVF-DFp-VzBN.js",
+      "_dataManager-qUq1lbjI.js",
+      "_supabaseDataManager-CPgVSS-r.js"
     ]
   },
   "node_modules/@react-router/dev/dist/config/defaults/entry.client.tsx": {
-    "file": "assets/entry.client-BjcgT1Ey.js",
+    "file": "assets/entry.client-PALIoZKt.js",
     "name": "entry.client",
     "src": "node_modules/@react-router/dev/dist/config/defaults/entry.client.tsx",
     "isEntry": true,
     "imports": [
-      "_chunk-EF7DTUVF-CXM15GyG.js"
+      "_chunk-EF7DTUVF-DFp-VzBN.js"
     ]
   }
 }
