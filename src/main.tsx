@@ -6,7 +6,6 @@ import {
   Outlet,
 } from "react-router-dom";
 
-import { Header } from "../app/components/Header";
 import Home from "../app/routes/home";
 import Services from "../app/routes/services";
 import ServiceDetail from "../app/routes/service.$serviceId";
@@ -15,6 +14,7 @@ import ProviderDashboard from "../app/routes/provider-dashboard";
 import AddService from "../app/routes/add-service";
 import TestSupabase from "../app/routes/test-supabase";
 import DebugEnv from "../app/routes/debug-env";
+import { Header } from "../app/components/Header";
 
 // CSS import
 import "../app/app.css";

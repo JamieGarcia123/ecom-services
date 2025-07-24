@@ -1,27 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import type { Item } from "../components/ItemCard";
-
-// Simple function to load service data directly
-async function loadServiceData(id: number): Promise<Item | null> {
-  try {
-    // Use fetch for browser compatibility (SPA mode)
-    // Handle both development and production paths
-    const basePath = window.location.hostname === 'localhost' ? '' : '/ecom-services';
-    const response = await fetch(`${basePath}/data/services.json`);
-    if (!response.ok) {
-      console.error('Failed to fetch services.json:', response.status);
-      return null;
-    }
-    
-    const services = await response.json();
-    const service = services.find((s: any) => s.id === id && s.active !== false);
-    return service || null;
-  } catch (error) {
-    console.error('Error loading service data:', error);
-    return null;
-  }
-}
+import { supabaseDataManager } from "../data/supabaseManager";
 
 export default function ServiceDetails() {
   const { serviceId } = useParams();
@@ -44,7 +24,7 @@ export default function ServiceDetails() {
         const serviceIdNum = parseInt(serviceId);
         console.log('Loading service with ID:', serviceIdNum);
         
-        const serviceData = await loadServiceData(serviceIdNum);
+        const serviceData = await supabaseDataManager.getServiceById(serviceIdNum);
         console.log('Service found:', serviceData);
         
         if (!serviceData) {
