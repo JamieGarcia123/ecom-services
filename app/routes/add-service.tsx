@@ -27,6 +27,7 @@ export default function AddService() {
       // Validation
       const price = parseFloat(formData.get('price') as string);
       const duration = formData.get('duration') as string;
+      const serviceName = formData.get('name') as string;
       
       // Price validation
       if (isNaN(price) || price <= 0) {
@@ -41,15 +42,30 @@ export default function AddService() {
         setIsSubmitting(false);
         return;
       }
+
+      // Handle image upload or URL
+      let imageUrl = formData.get('image') as string || undefined;
+      const imageFile = formData.get('imageFile') as File;
+      
+      if (imageFile && imageFile.size > 0) {
+        setError("Uploading image...");
+        imageUrl = await supabaseDataManager.uploadServiceImage(imageFile, serviceName);
+        if (!imageUrl) {
+          setError("Failed to upload image. Please try again or use an image URL instead.");
+          setIsSubmitting(false);
+          return;
+        }
+        setError(null);
+      }
       
       const serviceData = {
-        name: formData.get('name') as string,
+        name: serviceName,
         description: formData.get('description') as string,
         price: Math.round(price * 100) / 100, // Round to 2 decimal places
         category: formData.get('category') as string,
         provider: formData.get('provider') as string,
         duration: duration || undefined,
-        image: formData.get('image') as string || undefined,
+        image: imageUrl,
       };
 
       const newService = await supabaseDataManager.addService(serviceData);
@@ -259,21 +275,48 @@ export default function AddService() {
               </div>
             </div>
 
-            {/* Image URL */}
+            {/* Image Upload */}
             <div>
-              <label htmlFor="image" className="block text-sm font-medium text-gray-700">
-                Image URL
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Service Image
               </label>
-              <input
-                type="url"
-                id="image"
-                name="image"
-                className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                placeholder="/images/service-name.jpg"
-              />
-              <p className="mt-1 text-sm text-gray-500">
-                Optional: URL to service image (relative or absolute)
-              </p>
+              
+              {/* File Upload Option */}
+              <div className="mb-4">
+                <label htmlFor="imageFile" className="block text-sm font-medium text-gray-600 mb-1">
+                  Upload Image File
+                </label>
+                <input
+                  type="file"
+                  id="imageFile"
+                  name="imageFile"
+                  accept="image/*"
+                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                />
+                <p className="mt-1 text-sm text-gray-500">
+                  Upload an image file (JPG, PNG, WebP, etc.)
+                </p>
+              </div>
+
+              {/* OR divider */}
+              <div className="text-center text-gray-500 mb-4">— OR —</div>
+
+              {/* URL Option */}
+              <div>
+                <label htmlFor="image" className="block text-sm font-medium text-gray-600 mb-1">
+                  Image URL
+                </label>
+                <input
+                  type="url"
+                  id="image"
+                  name="image"
+                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  placeholder="https://example.com/image.jpg"
+                />
+                <p className="mt-1 text-sm text-gray-500">
+                  Or paste a URL to an existing image
+                </p>
+              </div>
             </div>
 
             {/* Submit Button */}

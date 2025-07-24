@@ -142,6 +142,36 @@ export class SupabaseDataManager {
     }
   }
 
+  // Image upload method
+  async uploadServiceImage(file: File, serviceName: string): Promise<string | null> {
+    try {
+      // Create a unique filename
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${serviceName.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${Date.now()}.${fileExt}`;
+      const filePath = `service-images/${fileName}`;
+
+      // Upload file to Supabase Storage
+      const { data, error } = await supabase.storage
+        .from('service-images')
+        .upload(filePath, file);
+
+      if (error) {
+        console.error('Upload error:', error);
+        return null;
+      }
+
+      // Get public URL
+      const { data: urlData } = supabase.storage
+        .from('service-images')
+        .getPublicUrl(filePath);
+
+      return urlData.publicUrl;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      return null;
+    }
+  }
+
   // Provider methods
   async getProviderByEmail(email: string): Promise<DatabaseProvider | null> {
     try {

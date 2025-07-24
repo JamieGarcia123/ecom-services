@@ -15,6 +15,7 @@ import AddService from "../app/routes/add-service";
 import TestSupabase from "../app/routes/test-supabase";
 import DebugEnv from "../app/routes/debug-env";
 import MigrateDuration from "../app/routes/migrate-duration";
+import SetupImageUpload from "../app/routes/setup-image-upload";
 import { Header } from "../app/components/Header";
 
 // CSS import
@@ -43,6 +44,7 @@ const router = createBrowserRouter([
       { path: "test-supabase", element: <TestSupabase /> },
       { path: "debug-env", element: <DebugEnv /> },
       { path: "migrate-duration", element: <MigrateDuration /> },
+      { path: "setup-image-upload", element: <SetupImageUpload /> },
     ],
   },
 ]);
