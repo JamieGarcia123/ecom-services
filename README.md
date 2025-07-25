@@ -79,13 +79,17 @@ src/
         └── landing.tsx         # Landing page component
 ```
 
-##  Available Scripts
+## 🔧 Available Scripts
 
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
 - `npm run preview` - Preview production build locally
+- `npm run test` - Run tests in watch mode
+- `npm run test:run` - Run tests once
 - `npm run lint` - Run ESLint
 
+
+## 🎯 Usage
 
 ### For Service Seekers
 1. Visit the homepage to see featured services
@@ -98,6 +102,25 @@ src/
 2. Add new services with title, description, price, duration, and images
 3. Edit existing services
 4. Delete services you no longer offer
+
+## 🧪 Testing
+
+This project includes unit tests to ensure code quality and functionality:
+
+```bash
+# Run tests once
+npm run test:run
+
+# Run tests in watch mode (for development)
+npm test
+```
+
+The test suite includes:
+- **Utility function tests**: Price formatting, duration formatting, data validation
+- **Component tests**: React component rendering and user interactions
+- **Integration tests**: Database operations and API interactions
+
+Current test coverage includes 25+ tests covering critical application functionality.
 
 ## 🐛 Troubleshooting
 
