@@ -32,7 +32,7 @@ export function Landing() {
               <div className="sm:text-center lg:text-left">
                 <h1 className="text-4xl tracking-tight font-bold text-gray-900 sm:text-5xl md:text-6xl">
                   <span className="block xl:inline">Transform Your </span>
-                  <span className="block text-green-600 xl:inline">Well-being</span>
+                  <span className="block text-green-600 xl:inline">Well-being Today!</span>
                 </h1>
                 <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
                   Discover holistic services and wellness offerings designed to help you take control of your health naturally. 

@@ -2,7 +2,6 @@
   "name": "my-app",
   "private": true,
   "type": "module",
-  "homepage": "https://jamiegarcia123.github.io/ecom-services/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
